@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diagnóstico - Raíces Digitales</title>
+    <!-- ====== FAVICON ====== -->
+    <link rel="icon" type="image/x-icon" href="favico.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <style>
+        /* ============================================
+           ESTILOS ESPECÍFICOS DEL DIAGNÓSTICO
+        ============================================ */
+        .diagnostic-page {
+            padding: 40px 0 60px;
+            background: var(--color-background);
+            min-height: calc(100vh - 140px);
+        }
+
+        .diagnostic-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .diagnostic-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .diagnostic-header h1 span {
+            color: var(--color-primary);
+        }
+
+        /* Progreso del diagnóstico */
+        .diagnostic-progress {
+            background: var(--color-white);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 12px var(--color-shadow);
+            border: 1px solid var(--color-border);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-diagnostic {
+            height: 10px;
+            background: var(--color-border);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        .progress-bar-diagnostic .progress-fill {
+            height: 100%;
+            border-radius: 50px;
+            background: linear-gradient(90deg, var(--color-primary-light), var(--color-primary));
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* Tarjeta de pregunta */
+        .question-card {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: 0 4px 24px var(--color-shadow);
+            border: 1px solid var(--color-border);
+            max-width: 800px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+        }
+
+        .question-area {
+            display: inline-block;
+            background: rgba(45, 106, 79, 0.1);
+            color: var(--color-primary);
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .question-number {
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        /* Opciones de respuesta */
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--color-white);
+        }
+
+        .option-item:hover {
+            border-color: var(--color-primary-light);
+            background: rgba(45, 106, 79, 0.04);
+        }
+
+        .option-item.selected {
+            border-color: var(--color-primary);
+            background: rgba(45, 106, 79, 0.08);
+            box-shadow: 0 0 0 4px rgba(45, 106, 79, 0.1);
+        }
+
+        .option-item .option-radio {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .option-item.selected .option-radio {
+            border-color: var(--color-primary);
+            background: var(--color-primary);
+        }
+
+        .option-item.selected .option-radio::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .option-item .option-label {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .option-item .option-letter {
+            font-weight: 700;
+            color: var(--color-text-light);
+            width: 24px;
+            flex-shrink: 0;
+        }
+
+        /* Navegación entre preguntas */
+        .question-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid var(--color-border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .question-nav .btn {
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .question-nav .dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .question-nav .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--color-border);
+            transition: var(--transition);
+        }
+
+        .question-nav .dot.active {
+            background: var(--color-primary);
+        }
+
+        .question-nav .dot.completed {
+            background: var(--color-primary-light);
+        }
+
+        /* Resultados */
+        .results-card {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: 0 4px 24px var(--color-shadow);
+            border: 1px solid var(--color-border);
+            max-width: 800px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .results-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .results-header .icon {
+            font-size: 4rem;
+            margin-bottom: 12px;
+        }
+
+        .results-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .results-header .subtitle {
+            color: var(--color-text-light);
+            font-size: 1.05rem;
+        }
+
+        .results-level {
+            display: inline-block;
+            padding: 8px 32px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 12px 0;
+        }
+
+        .results-level.basico {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .results-level.intermedio {
+            background: #E3F2FD;
+            color: #0D47A1;
+        }
+
+        .results-level.avanzado {
+            background: #E8F5E9;
+            color: #1B5E20;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .results-area {
+            background: var(--color-background);
+            padding: 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--color-border);
+        }
+
+        .results-area .area-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .results-area .area-score {
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .results-area .area-bar {
+            height: 6px;
+            background: var(--color-border);
+            border-radius: 50px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .results-area .area-bar .fill {
+            height: 100%;
+            border-radius: 50px;
+            background: linear-gradient(90deg, var(--color-primary-light), var(--color-primary));
+            transition: width 0.8s ease;
+            width: 0%;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .btn-warning {
+            background-color: #F0AD4E;
+            color: white;
+            border-color: #F0AD4E;
+        }
+
+        .btn-warning:hover {
+            background-color: #D98C2E;
+            border-color: #D98C2E;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .question-card {
+                padding: 24px 20px;
+            }
+
+            .results-card {
+                padding: 24px 20px;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .question-nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .question-nav .dots {
+                justify-content: center;
+            }
+
+            .question-nav .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-custom" style="padding: 0 !important; min-height: auto !important; overflow: visible !important;">
+        <div class="nav-container" style="height: 83px; padding: 0 16px; overflow: visible !important; position: relative;">
+            <div class="nav-brand logo-container" style="display: flex; align-items: center; height: 150%; overflow: visible !important;">
+            <img src="assets/img/logo-raices.png" alt="Raíces Digitales" class="logo-img" style="height: 120px; width: auto; z-index: 10; display: block;" />
+            <span style="font-size: 1.2rem; line-height: 1; font-weight: 700; margin-left: 6px;">Raíces Digitales</span>
+        </div>
+            <div class="nav-links">
+                <!-- Se carga dinámicamente con app.js -->
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="diagnostic-page">
+        <div class="container">
+            <!-- Header -->
+            <div class="diagnostic-header">
+                <h1>📋 Diagnóstico de <span>competencias digitales</span></h1>
+                <span style="color:var(--color-text-light);font-size:0.95rem;">
+                    Basado en DigComp 2.2
+                </span>
+            </div>
+
+            <!-- Barra de progreso -->
+            <div class="diagnostic-progress" id="progressBarContainer">
+                <div class="progress-info">
+                    <span id="progressLabel">Pregunta 1 de 10</span>
+                    <span id="progressPercentage">0%</span>
+                </div>
+                <div class="progress-bar-diagnostic">
+                    <div class="progress-fill" id="progressFill" style="width:0%;"></div>
+                </div>
+            </div>
+
+            <!-- Contenedor de preguntas -->
+            <div id="questionsContainer">
+                <!-- Las preguntas se generan dinámicamente con JS -->
+            </div>
+
+            <!-- Contenedor de resultados -->
+            <div class="results-card" id="resultsContainer">
+                <!-- Se llena dinámicamente con JS -->
+            </div>
+
+            <!-- Botón para reiniciar (visible solo en resultados) -->
+            <div style="text-align:center;margin-top:20px;display:none;" id="resetButtonContainer">
+                <button class="btn btn-outline" onclick="resetDiagnostic()">
+                    <i class="fas fa-redo"></i> Reiniciar diagnóstico
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Raíces Digitales - Proyecto de Grado UNAD</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/diagnostic.js"></script>
+</body>
+</html>

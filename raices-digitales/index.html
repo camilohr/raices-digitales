@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raíces Digitales - Fortalece tus competencias digitales</title>
+    <!-- ====== FAVICON ====== -->
+    <link rel="icon" type="image/x-icon" href="favico.ico" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <style>
+        /* ============================================
+           ESTILOS ESPECÍFICOS DEL INDEX
+        ============================================ */
+        
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 60px;
+            background: linear-gradient(135deg, #F0F7F4 0%, #FFFFFF 100%);
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-text .badge {
+            display: inline-block;
+            background: rgba(45, 106, 79, 0.12);
+            color: var(--color-primary);
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-text h1 {
+            font-size: 3.2rem;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            color: var(--color-primary-dark);
+        }
+
+        .hero-text h1 span {
+            color: var(--color-primary);
+            position: relative;
+        }
+
+        .hero-text h1 span::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: rgba(82, 183, 136, 0.3);
+            border-radius: 50px;
+        }
+
+        .hero-text p {
+            font-size: 1.15rem;
+            color: var(--color-text-light);
+            max-width: 480px;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-illustration {
+            display: flex;
+            gap: 30px;
+            font-size: 4rem;
+            color: var(--color-primary);
+            background: var(--color-white);
+            padding: 60px 50px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-illustration::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 70% 30%, rgba(45, 106, 79, 0.05), transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-illustration i {
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-illustration i:hover {
+            transform: translateY(-8px) scale(1.1);
+        }
+
+        .hero-illustration .fa-plant-wilt {
+            color: #52B788;
+        }
+
+        .hero-illustration .fa-laptop {
+            color: #2D6A4F;
+        }
+
+        .hero-illustration .fa-users {
+            color: #40916C;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background-color: var(--color-white);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 48px;
+        }
+
+        .section-header h2 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--color-primary-dark);
+        }
+
+        .section-header h2 span {
+            color: var(--color-primary);
+        }
+
+        .section-header p {
+            color: var(--color-text-light);
+            font-size: 1.05rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--color-white);
+            padding: 32px 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid var(--color-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary-light), var(--color-primary));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-primary-light);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(45, 106, 79, 0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--color-primary);
+            color: var(--color-white);
+            transform: scale(1.05);
+        }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--color-primary-dark);
+        }
+
+        .feature-card p {
+            color: var(--color-text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 60px 0;
+            background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .cta-section p {
+            font-size: 1.05rem;
+            opacity: 0.85;
+            max-width: 500px;
+            margin: 0 auto 24px;
+        }
+
+        .cta-section .btn {
+            background: white;
+            color: var(--color-primary);
+            border-color: white;
+        }
+
+        .cta-section .btn:hover {
+            background: transparent;
+            color: white;
+            border-color: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text p {
+                margin: 0 auto 32px;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-illustration {
+                padding: 40px 30px;
+                font-size: 3rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2.6rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 40px 0;
+                min-height: auto;
+            }
+
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+
+            .hero-text p {
+                font-size: 1rem;
+            }
+
+            .hero-illustration {
+                padding: 30px 20px;
+                font-size: 2.5rem;
+                gap: 20px;
+            }
+
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .cta-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero-illustration {
+                padding: 20px 16px;
+                font-size: 2rem;
+                gap: 14px;
+            }
+
+            .hero-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .btn-lg {
+                padding: 12px 20px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+    NAVBAR
+    ============================================ -->
+<nav class="navbar navbar-custom" style="padding: 0 !important; min-height: auto !important; overflow: visible !important;">
+    <div class="nav-container" style="height: 83px; padding: 0 16px; overflow: visible !important; position: relative;">
+        <div class="nav-brand logo-container" style="display: flex; align-items: center; height: 150%; overflow: visible !important;">
+            <img src="assets/img/logo-raices.png" alt="Raíces Digitales" class="logo-img" style="height: 120px; width: auto; z-index: 10; display: block;" />
+            <span style="font-size: 1.2rem; line-height: 1; font-weight: 700; margin-left: 6px;">Raíces Digitales</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="active">Inicio</a>
+            <a href="login.html" class="btn btn-outline btn-sm">Iniciar Sesión</a>
+            <a href="register.html" class="btn btn-primary btn-sm">Registrarse</a>
+        </div>
+        <button class="nav-toggle" id="navToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+    <!-- ============================================
+    HERO SECTION
+    ============================================ -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <span class="badge">
+                        <i class="fas fa-brain"></i> Proyecto de innovación social
+                    </span>
+                    <h1>
+                        Fortalece tus <span>competencias digitales</span> desde tu comunidad
+                    </h1>
+                    <p>
+                        Raíces Digitales es una plataforma inteligente que te ayuda a desarrollar
+                        habilidades digitales a través de rutas de aprendizaje personalizadas,
+                        diseñadas especialmente para comunidades rurales del sur del Huila.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="register.html" class="btn btn-primary btn-lg">
+                            <i class="fas fa-rocket"></i> Comenzar ahora
+                        </a>
+                        <a href="#features" class="btn btn-outline btn-lg">
+                            <i class="fas fa-info-circle"></i> Conocer más
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-illustration">
+                        <i class="fas fa-brain"></i>
+                        <i class="fas fa-laptop-code"></i>
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    FEATURES SECTION
+    ============================================ -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>¿Qué ofrece <span>Raíces Digitales</span>?</h2>
+                <p>Una plataforma diseñada para cerrar la brecha digital en las comunidades rurales</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3>Diagnóstico Personalizado</h3>
+                    <p>Evalúa tu nivel de competencias digitales en las 5 áreas del marco DigComp 2.2</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h3>Rutas de Aprendizaje</h3>
+                    <p>Recibe recomendaciones de contenido adaptadas a tu nivel y necesidades específicas</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Seguimiento de Progreso</h3>
+                    <p>Visualiza tu avance en tiempo real y mantén la motivación con metas claras</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Seguridad y Confianza</h3>
+                    <p>Aprende a navegar el mundo digital de forma segura, crítica y responsable</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    CTA SECTION
+    ============================================ -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>🧠 ¿Listo para comenzar tu viaje digital?</h2>
+            <p>Regístrate gratis y accede a contenido educativo personalizado para fortalecer tus competencias digitales.</p>
+            <a href="register.html" class="btn btn-lg">
+                <i class="fas fa-user-plus"></i> Crear cuenta gratis
+            </a>
+        </div>
+    </section>
+
+    <!-- ============================================
+    FOOTER
+    ============================================ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa fa-book-open"></i>
+                    <span>Raíces Digitales</span>
+                    <p>Fortalecimiento de competencias digitales en comunidades rurales del Huila</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Enlaces rápidos</h4>
+                    <a href="index.html">Inicio</a>
+                    <a href="login.html">Iniciar sesión</a>
+                    <a href="register.html">Registrarse</a>
+                    <a href="#features">Características</a>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-envelope"></i> raicesdigitales@unad.edu.co</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Sur del Huila, Colombia</p>
+                    <p><i class="fas fa-university"></i> UNAD - Ingeniería de Sistemas</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Raíces Digitales - Proyecto de Grado UNAD</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================
+    SCRIPTS
+    ============================================ -->
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>

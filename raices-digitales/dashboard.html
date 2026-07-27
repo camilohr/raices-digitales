@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Raíces Digitales</title>
+    <!-- ====== FAVICON ====== -->
+    <link rel="icon" type="image/x-icon" href="favico.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <style>
+        /* Estilos existentes + nuevos */
+        .dashboard-page {
+            padding: 40px 0 60px;
+            background: var(--color-background);
+            min-height: calc(100vh - 140px);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .dashboard-header h1 span {
+            color: var(--color-primary);
+        }
+
+        .dashboard-header .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--color-white);
+            padding: 8px 20px 8px 16px;
+            border-radius: 50px;
+            box-shadow: 0 2px 8px var(--color-shadow);
+        }
+
+        .user-badge .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .user-badge .user-name {
+            font-weight: 600;
+        }
+
+        .user-badge .user-level {
+            font-size: 0.8rem;
+            color: var(--color-text-light);
+            background: var(--color-background);
+            padding: 2px 12px;
+            border-radius: 50px;
+        }
+
+        .card {
+            background: var(--color-white);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: 0 2px 12px var(--color-shadow);
+            border: 1px solid var(--color-border);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--color-primary);
+        }
+
+        .diagnostic-status {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border-radius: var(--radius);
+            background: var(--color-background);
+            margin-bottom: 0;
+        }
+
+        .diagnostic-status .status-icon {
+            font-size: 2rem;
+        }
+
+        .diagnostic-status .status-text {
+            flex: 1;
+        }
+
+        .diagnostic-status .status-text h4 {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .diagnostic-status .status-text p {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            margin: 0;
+        }
+
+        .progress-item {
+            margin-bottom: 12px;
+        }
+
+        .progress-item .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--color-border);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        .progress-bar .progress-fill {
+            height: 100%;
+            border-radius: 50px;
+            background: linear-gradient(90deg, var(--color-primary-light), var(--color-primary));
+            transition: width 0.6s ease;
+            width: 0%;
+        }
+
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .activity-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 0.95rem;
+        }
+
+        .activity-list li:last-child {
+            border-bottom: none;
+        }
+
+        .activity-list .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(45, 106, 79, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+            flex-shrink: 0;
+        }
+
+        .activity-list .activity-date {
+            margin-left: auto;
+            font-size: 0.75rem;
+            color: var(--color-text-light);
+            flex-shrink: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--color-text-light);
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            color: var(--color-border);
+            margin-bottom: 12px;
+        }
+
+        .empty-state h4 {
+            color: var(--color-text);
+            margin-bottom: 4px;
+            font-size: 1rem;
+        }
+
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard Grid Mejorado */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Estadísticas rápidas */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        /* Módulos recientes en sidebar */
+        .module-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .module-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .module-list::-webkit-scrollbar-thumb {
+            background: var(--color-border);
+            border-radius: 50px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .dashboard-header .user-badge {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .diagnostic-status {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .diagnostic-status .status-text {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-custom" style="padding: 0 !important; min-height: auto !important; overflow: visible !important;">
+        <div class="nav-container" style="height: 83px; padding: 0 16px; overflow: visible !important; position: relative;">
+            <div class="nav-brand logo-container" style="display: flex; align-items: center; height: 150%; overflow: visible !important;">
+            <img src="assets/img/logo-raices.png" alt="Raíces Digitales" class="logo-img" style="height: 120px; width: auto; z-index: 10; display: block;" />
+            <span style="font-size: 1.2rem; line-height: 1; font-weight: 700; margin-left: 6px;">Raíces Digitales</span>
+        </div>
+            <div class="nav-links">
+                <!-- Se carga dinámicamente con app.js -->
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="dashboard-page">
+        <div class="container">
+            <!-- Header -->
+            <div class="dashboard-header" id="dashboardHeader">
+                <!-- Se llena dinámicamente -->
+            </div>
+
+            <!-- Estadísticas rápidas -->
+            <div class="quick-stats" id="quickStatsContainer">
+                <!-- Se llena dinámicamente -->
+            </div>
+
+            <!-- Grid principal -->
+            <div class="dashboard-grid">
+                <!-- Columna principal -->
+                <div class="dashboard-main">
+                    <!-- Estado del diagnóstico -->
+                    <div class="card" id="diagnosticCard">
+                        <div class="card-title">
+                            <i class="fas fa-clipboard-list"></i>
+                            Diagnóstico de competencias
+                        </div>
+                        <div id="diagnosticContent">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Progreso por áreas -->
+                    <div class="card" id="progressCard">
+                        <div class="card-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Tu progreso
+                        </div>
+                        <div id="progressContent">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna lateral -->
+                <div class="dashboard-sidebar">
+                    <!-- Progreso de módulos -->
+                    <div class="card" id="moduleProgressCard">
+                        <div class="card-title">
+                            <i class="fas fa-book"></i>
+                            Módulos de aprendizaje
+                        </div>
+                        <div id="moduleProgressContent">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Actividades recientes -->
+                    <div class="card" id="recentActivityCard">
+                        <div class="card-title">
+                            <i class="fas fa-clock"></i>
+                            Actividad reciente
+                        </div>
+                        <div id="recentActivityContent">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Recomendaciones -->
+                    <div class="card" id="recommendationsCard">
+                        <div class="card-title">
+                            <i class="fas fa-lightbulb"></i>
+                            Recomendaciones
+                        </div>
+                        <div id="recommendationsContent">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Raíces Digitales - Proyecto de Grado UNAD</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+</body>
+</html>
